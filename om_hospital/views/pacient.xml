@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pacient_kanban" model="ir.ui.view">
+        <field name="name">hospital.pacient</field>
+        <field name="model">hospital.pacient</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="note"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <ul>
+                                    <li>
+                                        Name: <field name="name"/>
+                                    </li>
+                                    <li>
+                                        Age: <field name="age"/>
+                                    </li>
+                                    <li>
+                                        Gender: <field name="gender"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pacient_tree" model="ir.ui.view">
+        <field name="name">hospital.pacient.tree</field>
+        <field name="model">hospital.pacient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="note"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pacient_form" model="ir.ui.view">
+        <field name="name">hospital.pacient.form</field>
+        <field name="model">hospital.pacient</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button id="button_confirm" name="action_confirm" string="Confirm" class="btn-primary"
+                            states="draft" type="object"/>
+                    <button id="button_done" name="action_done" string="Mark As Done" class="btn-primary"
+                            states="confirm" type="object"/>
+                    <button id="button_draft" name="action_draft" string="Set To Draft" class="btn-primary"
+                            states="cancel" type="object"/>
+                    <button id="button_cancel" name="action_cancel" string="Cancel"
+                            states="draft,done,confirm" type="object"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done,confirm"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="age"/>
+                        </group>
+                        <group>
+                            <field name="gender"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pacient_search" model="ir.ui.view">
+        <field name="name">hospital.pacient.search</field>
+        <field name="model">hospital.pacient</field>
+        <field name="arch" type="xml">
+            <search string="Pacients">
+                <field name="name"/>
+                <field name="note"/>
+                <separator/>
+                <filter string="Male" name="male" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="female" domain="[('gender', '=', 'female')]"/>
+                <filter string="Others" name="other" domain="[('gender', '=', 'other')]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by':'gender'}"/>
+                    <filter string="Pacient Name" name="pacient_name" context="{'group_by':'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="pacient_action" model="ir.actions.act_window">
+        <field name="name">Pacients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.pacient</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                create your first pacient!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="hospital_root"
+              name="Hospital"
+              sequence="10"/>
+
+    <menuitem id="hospital_pacient_root"
+              name="Pacients"
+              parent="hospital_root"
+              sequence="10"/>
+
+    <menuitem id="hospital_pacient"
+              name="Pacients"
+              parent="hospital_pacient_root"
+              action="pacient_action"
+              sequence="10"/>
+
+</odoo>
